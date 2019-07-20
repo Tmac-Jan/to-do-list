@@ -64,9 +64,8 @@
          !e.isComplete);
        }else{
          console.log("wancheng");
-         return this.todoList.filter((e)=>{
-           e.isComplete;
-         });
+         return this.todoList.filter((e)=>
+           e.isComplete);
        }
       }
     },
@@ -109,6 +108,9 @@
   }
  ul{
    list-style-type: none;
+ }
+ .todoitem{
+   text-align: left;
  }
   .todoTab ul {
     padding: 0;
