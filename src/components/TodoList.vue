@@ -6,12 +6,14 @@
     </div>
     <div class="center">
       <div class="addToDoList">
-        <input type="text" v-model="todoItem" placeholder="add to do item" style="width: 80%;"></input>
-        <Button @click="addToDoItem">add</Button>
+        <input type="text" v-model="todoItem" placeholder="add to do item"
+               @keyup.enter="enterAddToDoItem(todoItem)"
+               style="width: 80%;"></input>
+        <Button @click="addToDoItem(todoItem)">add</Button>
       </div>
       <div class="todolist">
         <ul class="listView" v-show="todoList.length">
-          <li v-for="item in filterList">
+          <li v-for="item in generateFilterList">
             <div class="todoitem">
               <input type="checkbox" v-model="item.isComplete"/>
               <label v-show="!item.editable"
@@ -27,13 +29,13 @@
       <div class="todoTab">
         <ul class="item-count">
           <li class="action">
-            <a :class="{active:visibility='all'}" href="javascript:void(0);" @click="">ALL</a>
+            <a :class="{active:visibility='all'}" href="javascript:void(0);" @click="switchTab('ALL')">ALL</a>
           </li>
           <li class="action">
-            <a :class="{active:visibility='unCompleted'}"  href="javascript:void(0);"  @click="">Active</a>
+            <a :class="{active:visibility='unCompleted'}"  href="javascript:void(0);"  @click="switchTab('Active')">Active</a>
           </li>
           <li class="action">
-            <a :class="{active:visibility='completed'}" href="javascript:void(0);"  @click="">Complete</a>
+            <a :class="{active:visibility='completed'}" href="javascript:void(0);"  @click="switchTab('Complete')">Complete</a>
           </li>
         </ul>
       </div>
@@ -47,13 +49,31 @@
     data() {
       return {
         todoList: [],
-        filterList: [],
-        todoItem: ''
+       // filterList: [],
+        todoItem: '',
+        tabType:'ALL'
+      }
+    },
+    computed:{
+      generateFilterList(){
+       if (this.tabType==='ALL'){
+         return this.todoList;
+       } else if(this.tabType==='Active'){
+         return this.todoList.filter((e)=>
+         !e.isComplete);
+       }else{
+         return this.todoList.filter((e)=>{
+           e.isComplete;
+         })
+       }
       }
     },
     methods: {
+      enterAddToDoItem(todoItem){
+        this.addToDoItem(todoItem);
+      },
       addToDoItem(todoItem) {
-        if (todoItem.length === 0 || todoItem === '') {
+        if ( todoItem === '') {
           return;
         } else {
           this.todoList.push({
@@ -63,6 +83,9 @@
           })
           this.todoItem='';
         }
+      },
+      switchTab(value){
+        this.tabType=value;
       }
     }
   }
@@ -73,15 +96,16 @@
   h1, h2 {
     font-weight: normal;
   }
-
-  ul {
-    list-style-type: none;
+ ul{
+   list-style-type: none;
+ }
+  .todoTab ul {
     padding: 0;
     display: inline-block;
     overflow: auto;
   }
 
-  li {
+ .item-count li {
     display: inline-block;
     margin: 0 10px;
   }
