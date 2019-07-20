@@ -15,14 +15,13 @@
         <ul class="listView" v-show="todoList.length">
           <li v-for="item in generateFilterList">
             <div class="todoitem">
-              <input type="checkbox" v-model="item.isComplete" checked="item.isComplete?'checked':''"
-                     "/>
+              <input type="checkbox" v-model="item.isComplete" checked="item.isComplete?'checked':''"/>
               <label v-show="!item.editable"
                      @dblclick="startEditTodoItem(item)"
-                     :class="item.isComplete ? 'toDoItem' : 'text'">{{item.todoItemName}}</label>
+                     :class="item.isComplete ? 'finish' : 'notFinish'">{{item.todoItemName}}</label>
               <input type="text" class="editor" v-model="item.todoItemName"
                      v-show="item.editable"
-                     @on-blur="editTodoItem(item)" @on-enter="editTodoItem(item)"/>
+                     @blur="editTodoItem(item)" @keyup.enter="editTodoItem(item)"/>
             </div>
           </li>
         </ul>
@@ -64,6 +63,7 @@
          return this.todoList.filter((e)=>
          !e.isComplete);
        }else{
+         console.log("wancheng");
          return this.todoList.filter((e)=>{
            e.isComplete;
          });
@@ -75,9 +75,7 @@
         this.addToDoItem(todoItem);
       },
       startEditTodoItem(todoItem){
-        console.log("startEditTodoItem1");
         todoItem.editable=true;
-        console.log("startEditTodoItem2");
       },
       editTodoItem(todoItem){
         todoItem.editable=false;
@@ -117,7 +115,19 @@
     display: inline-block;
     overflow: auto;
   }
-
+.addTodoList input{
+  -web-kit-appearance:none;
+  -moz-appearance: none;
+  font-size:1.4em;
+  height:2.7em;
+  border-radius:4px;
+  border:1px solid #c8cccf;
+  color:#6a6f77;
+  outline:0;
+}
+.addTodoList Button{
+  background: none; border:none; padding:0 3px;
+}
  .item-count li {
     display: inline-block;
     margin: 0 10px;
@@ -144,10 +154,11 @@
     line-height: 30px;
     display: block;
   }
-  .toDoItem{
-    color: blanchedalmond;
+  .finish{
+    color: goldenrod;
+    text-decoration:line-through
   }
   .active{
-    border:1px solid  red;
+    border:1px solid  rgb(247,234,234);
   }
 </style>
