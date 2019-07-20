@@ -15,13 +15,14 @@
         <ul class="listView" v-show="todoList.length">
           <li v-for="item in generateFilterList">
             <div class="todoitem">
-              <input type="checkbox" v-model="item.isComplete"/>
+              <input type="checkbox" v-model="item.isComplete" checked="item.isComplete?'checked':''"
+                     "/>
               <label v-show="!item.editable"
-                     :class="item.isComplete ? 'taskitem' : 'text'">{{item.todoItemName}}</label>
+                     @dblclick="startEditTodoItem(item)"
+                     :class="item.isComplete ? 'toDoItem' : 'text'">{{item.todoItemName}}</label>
               <input type="text" class="editor" v-model="item.todoItemName"
                      v-show="item.editable"
-                     @on-blur="" @on-enter="">
-              </input>
+                     @on-blur="editTodoItem(item)" @on-enter="editTodoItem(item)"/>
             </div>
           </li>
         </ul>
@@ -29,13 +30,13 @@
       <div class="todoTab">
         <ul class="item-count">
           <li class="action">
-            <a :class="{active:visibility='all'}" href="javascript:void(0);" @click="switchTab('ALL')">ALL</a>
+            <a :class="{active:tabType==='ALL'}" href="javascript:void(0);" @click="switchTab('ALL')">ALL</a>
           </li>
           <li class="action">
-            <a :class="{active:visibility='unCompleted'}"  href="javascript:void(0);"  @click="switchTab('Active')">Active</a>
+            <a :class="{active:tabType==='Active'}"  href="javascript:void(0);"  @click="switchTab('Active')">Active</a>
           </li>
           <li class="action">
-            <a :class="{active:visibility='completed'}" href="javascript:void(0);"  @click="switchTab('Complete')">Complete</a>
+            <a :class="{active:tabType==='Complete'}" href="javascript:void(0);"  @click="switchTab('Complete')">Complete</a>
           </li>
         </ul>
       </div>
@@ -51,7 +52,8 @@
         todoList: [],
        // filterList: [],
         todoItem: '',
-        tabType:'ALL'
+        tabType:'ALL',
+        visibility:"ALL"
       }
     },
     computed:{
@@ -64,7 +66,7 @@
        }else{
          return this.todoList.filter((e)=>{
            e.isComplete;
-         })
+         });
        }
       }
     },
@@ -72,15 +74,26 @@
       enterAddToDoItem(todoItem){
         this.addToDoItem(todoItem);
       },
+      startEditTodoItem(todoItem){
+        console.log("startEditTodoItem1");
+        todoItem.editable=true;
+        console.log("startEditTodoItem2");
+      },
+      editTodoItem(todoItem){
+        todoItem.editable=false;
+      },
+      updateItemComplete(todoItem){
+        todoItem.isComplete= !todoItem.isComplete;
+      },
       addToDoItem(todoItem) {
-        if ( todoItem === '') {
+        if ( todoItem === ''||todoItem==null) {
           return;
         } else {
           this.todoList.push({
             todoItemName: this.todoItem,
             isComplete: false,
             editable:false
-          })
+          });
           this.todoItem='';
         }
       },
@@ -131,7 +144,10 @@
     line-height: 30px;
     display: block;
   }
+  .toDoItem{
+    color: blanchedalmond;
+  }
   .active{
-    border:1px solid  #42b983;
+    border:1px solid  red;
   }
 </style>
